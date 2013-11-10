@@ -1,0 +1,7 @@
+<b><%= @question %></b>
+<form method = "post" action="/webanswer">
+	<input type="text" name="id" value= <%=@id%>><%=@id%><BR>
+<BR><% $numofdevices.times do |id| %>
+        <input type="checkbox" name="vehicle" value='<%= id %>[ip]'> <%= @response  %>[<%=:answers%>][<%=id%>] <br />
+    <% end %>
+<BR><input type="submit" value="OK"></form>

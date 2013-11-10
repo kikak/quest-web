@@ -12,6 +12,7 @@ def get(path)
   get_response(Net::HTTP::Get.new(path))
 end
 
+
 def post(path, data)
   request = Net::HTTP::Post.new(path)
   request.body = JSON.dump(data)
