@@ -1,7 +1,11 @@
-<b><%= @question %></b>
+<b><%= @question_text %></b>
+<br><%= @mapping %><BR>
+<br><%=@pokus%><BR>
 <form method = "post" action="/webanswer">
-	<input type="text" name="id" value= <%=@id%>><%=@id%><BR>
-<BR><% $numofdevices.times do |id| %>
-        <input type="checkbox" name="vehicle" value='<%= id %>[ip]'> <%= @response  %>[<%=:answers%>][<%=id%>] <br />
+	<input type="hidden" name="id" value= <%=@id%>>
+	<input type="hidden" name="question" value= <%=@question_data%> maxlength="200"> ":)" <BR>
+<% @numofdevices.times do |id| %>
+        <input type="checkbox" name="vehicle[]" value='<%= @numbers[id] %>'> <%=@options[id]%> <br />
+        <input type="hidden" name="options[]" value='<%=@options[id]%>'>
     <% end %>
 <BR><input type="submit" value="OK"></form>

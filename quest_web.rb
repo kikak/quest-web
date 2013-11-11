@@ -51,18 +51,35 @@ get '/webquestion' do
   response[:answers] = question[:answers].map do |answer|
     answer[:answer]
   end 
-  html = question[:question] + '<BR>'
-  html +='<form method = "post" action="/webanswer">'
-  html +='<input type = "hidden" name="id" value='+ id.to_s + '><BR>'
+  choices = ('0'..'9').first(response[:answers].size)
+  @mapping = Hash[choices.zip(response[:answers])].sort_by { rand }
+  @options = []
+  @numbers = []
   i = 0
-  while i < response[:answers].length 
-    @option1  = response[:answers][i]
-    html += '<input type="checkbox" name="vehicle[]" value='+ i.to_s + '>'+ response[:answers][i] +'<BR>'
+  @mapping.each do |key, value|
+    @options[i]="#{value}" 
+    @numbers[i]="#{key}" 
     i += 1
-  end
-  html += '<input type="submit" value="OK"></form>'
-  #erb :view_question
-  return html
+  end 
+  #@pokus = @mapping.sort_by { rand }
+  #answers = response[:answers].sort_by { rand }
+  @numofdevices = response[:answers].length
+  @id = id
+  #@options = @mapping[0]
+  @question_text = question[:question]
+  @question_data = question
+  #html = question[:question] + '<BR>'
+  #html +='<form method = "post" action="/webanswer">'
+  #html +='<input type = "hidden" name="id" value='+ id.to_s + '><BR>'
+  #i = 0
+  #while i < response[:answers].length 
+   # @option1  = response[:answers][i]
+    #html += '<input type="checkbox" name="vehicle[]" value='+ i.to_s + '>'+ response[:answers][i] +'<BR>'
+    #i += 1
+  #end
+  #html += '<input type="submit" value="OK"></form>'
+  erb :view_question
+  #return html
 end
 
 
@@ -70,10 +87,19 @@ end
 post '/webanswer' do
  
   question = QUESTIONS[params['id'].to_i]
+  #question = params['question']
+  html = "WEB ANSWER"
+  #html += 'question=' + question[0] + '.'
+  response = {}
+  response[:id] = params['id'].to_i
+  response[:question] = question[:question]
+  response[:answers] = question[:answers].map do |answer|
+    answer[:answer]
+  end 
+  
   correct_answers = question[:answers].select do |answer|
-    answer[:correct]
+      answer[:correct]
   end
-
 
   options = question[:answers].map do |answer|
     answer[:answer]
@@ -81,17 +107,21 @@ post '/webanswer' do
   checked_options = []
   i = 0
   params[:vehicle].each do |number|  
-    checked_options[i] = options[number.to_i] 
+    checked_options[i] = options[number.to_i]
+    html+="checked_options "+ i.to_s + ":"+ options[number.to_i] +"." 
     i += 1
   end
   
   correct_answers = correct_answers.map{|a| a[:answer]}
+  html+= 'Spravne odpovede:<BR>'+ correct_answers.to_s + '<BR> Zaskrknute odpovede:<BR>'+ checked_options.to_s + '<BR>'
   correct = correct_answers.sort  ==  checked_options.sort
   if correct
-      html = "Congratulation" + '<BR> '
-      html += "------------------------------------------------"
+      html += '<BR><b>Congratulation</b>'
+      html += '------------------------------------------------'
+      #@request = "Congratulation"
     else
-      html = "We are sorry, try again" + '<BR> '
+      html += '<BR><b>We are sorry, try again</b>'
+      #@request = "We are sorry, try again"
     end
   html +='<form method = "get" action="/webquestion"><input type="submit" value="NEXT"></form>'
   return html
