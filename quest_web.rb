@@ -8,7 +8,7 @@ DATA_FILE = File.expand_path('../ruby.txt', __FILE__)
 
 def parse_data(data)
   data.split(/^=$/).map do |question_data|
-  parse_question(question_data)
+    parse_question(question_data)
   end
 end
 
@@ -27,7 +27,6 @@ def parse_answers(answers_data)
 end
 
 QUESTIONS = parse_data(File.read(DATA_FILE))
-
 get '/question' do
   id = rand(QUESTIONS.size)
   question = QUESTIONS[id]
