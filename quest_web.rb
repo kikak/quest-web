@@ -103,18 +103,17 @@ end
 
 
 post '/answer' do
-	data = JSON.parse(request.body.read)
-	question = QUESTIONS[data['id']]
-	pp question
-	correct_answers = question[:answers].select do |answer|
-		answer[:correct]
-	end
-	pp correct_answers
-	correct_answers = correct_answers.map{|a| a[:answer]}
-	pp correct_answers
-	pp data['answers']
-	correct = correct_answers.sort == data['answers'].sort
+  data = JSON.parse(request.body.read)
+  question = QUESTIONS[data['id']]
+  pp question
+  correct_answers = question[:answers].select do |answer|
+    answer[:correct]
+  end
+  pp correct_answers
+  correct_answers = correct_answers.map{|a| a[:answer]}
+  pp correct_answers
+  pp data['answers']
+  correct = correct_answers.sort == data['answers'].sort
   json(:correct=>correct)
-	
 end
 
